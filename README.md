@@ -19,17 +19,15 @@ npm run dev
 
 ## 部署到公网
 
-你不需要写服务端。这个项目是静态网站，最简单推荐用 Vercel：
+你不需要写服务端。这个项目是静态网站，可以直接用 GitHub Pages：
 
-1. 把代码推送到 GitHub 仓库 `joker-ssh/qp-agent.git`
-2. 打开 Vercel，选择 `Import Git Repository`
-3. 选择这个仓库
-4. Framework Preset 选择 `Vite`
-5. Build Command 填 `npm run build`
-6. Output Directory 填 `dist`
-7. 点击 Deploy
+1. 打开 GitHub 仓库 `joker-ssh/qp-agent`
+2. 进入 `Settings` → `Pages`
+3. `Build and deployment` 的 `Source` 选择 `GitHub Actions`
+4. 以后每次推送 `main` 分支，GitHub 会自动运行 `.github/workflows/deploy.yml`
+5. 部署成功后的公网地址是 `https://joker-ssh.github.io/qp-agent/`
 
-部署完成后，Vercel 会给你一个公网 URL，别人可以直接访问。
+GitHub Pages 部署的是 `npm run build` 生成的 `dist` 静态文件。
 
 ## 推送到 GitHub
 

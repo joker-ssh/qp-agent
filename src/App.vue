@@ -1,12 +1,8 @@
 <template>
   <main
-    class="app-shell"
-    :class="[`motion-${motionName}`, { 'is-turning': isTurning }]"
-    :style="{ '--cursor-x': `${cursor.x}px`, '--cursor-y': `${cursor.y}px` }"
+    class="site"
+    :style="{ '--cursor-x': `${cursor.x}px`, '--cursor-y': `${cursor.y}px`, '--scroll-progress': `${scrollProgress}%` }"
     @mousemove="handlePointerMove"
-    @wheel.prevent="handleWheel"
-    @touchstart.passive="handleTouchStart"
-    @touchend.passive="handleTouchEnd"
   >
     <div class="background-grid"></div>
     <div class="grain"></div>
@@ -14,139 +10,171 @@
     <div class="ambient ambient--two"></div>
     <div class="cursor-glow"></div>
 
-    <header class="quiet-header">
-      <button type="button" class="brand-mark" @click="goTo(0)">个人 IP 操盘手</button>
-      <p>梁宸瑜账号一手操盘｜公司运营总监</p>
+    <header class="top-shell">
+      <button class="brand-mark" type="button" @click="scrollToSection('hero')">韦秋萍</button>
+      <p>运营总监｜梁宸瑜账号操盘手｜知识 IP 商业化</p>
     </header>
 
-    <div class="stage">
-      <section
-        v-for="(section, index) in sections"
-        :key="section.id"
-        class="screen"
-        :class="[`screen--${section.id}`, { 'is-active': activeIndex === index, 'is-prev': previousIndex === index }]"
-      >
-        <div class="screen__inner">
-          <template v-if="section.id === 'hero'">
-            <div class="hero-copy">
-              <p class="kicker">核心 IP 项目</p>
-              <h1>
-                <span>梁宸瑜，</span>
-                <span>我一手做起来的口才 IP。</span>
-              </h1>
-              <p class="lead">
-                我曾是梁宸瑜账号的操盘手，也是公司运营总监。这个账号不是单纯“做内容”，而是从人设定位、
-                短视频内容、直播转化、投放优化到团队协作，一整套增长系统被持续跑通。
-              </p>
-              <div class="hero-badges">
-                <span>全网矩阵 2400 万+ 粉丝</span>
-                <span>演讲口才赛道 TOP3</span>
-                <span>50 人+团队统筹</span>
-              </div>
-            </div>
-
-            <div class="ip-hero">
-              <div class="ip-hero__beam"></div>
-              <figure class="phone-card phone-card--primary">
-                <img :src="asset('ip-cases/liangchenyu-account-light.webp')" alt="梁宸瑜账号主页截图" />
-              </figure>
-              <figure class="phone-card phone-card--secondary">
-                <img :src="asset('ip-cases/liangchenyu-account-dark.webp')" alt="梁宸瑜账号数据截图" />
-              </figure>
-              <article class="floating-card">
-                <strong>2400万+</strong>
-                <span>从 IP 定位到内容商业化的全链路操盘结果</span>
-              </article>
-            </div>
-          </template>
-
-          <template v-else-if="section.id === 'system'">
-            <div class="section-heading">
-              <p class="kicker">操盘系统</p>
-              <h2>
-                <span>我做 IP，</span>
-                <span>不是靠灵感，是靠系统。</span>
-              </h2>
-            </div>
-            <div class="system-map">
-              <article v-for="item in systems" :key="item.title" class="system-card">
-                <span>{{ item.index }}</span>
-                <h3>{{ item.title }}</h3>
-                <p>{{ item.text }}</p>
-              </article>
-            </div>
-          </template>
-
-          <template v-else-if="section.id === 'result'">
-            <div class="case-copy">
-              <p class="kicker">跨赛道复制</p>
-              <h2>
-                <span>黄骐认知舱，</span>
-                <span>验证我的 IP 方法论。</span>
-              </h2>
-              <p>
-                在心理学垂类项目里，我从零启动内容方向，独立完成选题、文案、拍摄风格、剪辑节奏和转化路径设计。
-                通过短视频引流、低价课承接和私域转化，快速跑出商业结果。
-              </p>
-            </div>
-            <div class="result-grid">
-              <article v-for="metric in metrics" :key="metric.label">
-                <strong>{{ metric.value }}</strong>
-                <span>{{ metric.label }}</span>
-              </article>
-            </div>
-          </template>
-
-          <template v-else-if="section.id === 'proof'">
-            <div class="proof-title">
-              <p class="kicker">作品证据</p>
-              <h2>
-                <span>账号、课程、私域，</span>
-                <span>都是真实链路的一部分。</span>
-              </h2>
-            </div>
-            <div class="proof-wall">
-              <figure v-for="work in works" :key="work.src">
-                <img :src="asset(work.src)" :alt="work.alt" />
-                <figcaption>{{ work.caption }}</figcaption>
-              </figure>
-            </div>
-          </template>
-
-          <template v-else>
-            <div class="director-card">
-              <p class="kicker">运营总监能力</p>
-              <h2>
-                <span>我能做账号，</span>
-                <span>也能带团队打仗。</span>
-              </h2>
-              <div class="director-list">
-                <p>统筹剪辑、文案、摄影、直播运营等团队，建立 SOP 和内部培训机制。</p>
-                <p>用复盘机制应对平台算法变化，持续优化爆款率、进粉成本和直播转化。</p>
-                <p>既能做前台出镜和直播转化，也能做后台组织管理与业务协同。</p>
-              </div>
-            </div>
-          </template>
-        </div>
-      </section>
-    </div>
-
-    <nav class="progress-nav" aria-label="页面章节">
+    <nav class="side-progress" aria-label="页面章节">
       <button
-        v-for="(section, index) in sections"
+        v-for="section in sections"
         :key="section.id"
         type="button"
-        :class="{ active: activeIndex === index }"
-        @click="goTo(index)"
+        :class="{ active: activeSection === section.id }"
+        @click="scrollToSection(section.id)"
       >
-        {{ section.nav }}
+        <i></i>
+        <span>{{ section.nav }}</span>
       </button>
     </nav>
 
-    <div class="page-count">
-      <span>{{ currentPage }}</span>
-      <i></i>
-      <span>{{ totalPages }}</span>
+    <section id="hero" class="scene scene--hero" data-scene>
+      <div class="hero-copy reveal">
+              <p class="kicker">面试展示 · 核心项目</p>
+              <h1>
+                <span>韦秋萍</span>
+                <span>把知识 IP 做成长期生意的人</span>
+              </h1>
+              <p class="lead">
+          我目前担任运营总监，主要负责知识 IP 的内容增长、直播转化、投放优化和团队管理。
+          梁宸瑜账号是我重点参与操盘的代表项目之一，也是我运营方法和团队管理能力的集中体现。
+              </p>
+        <div class="hero-badges">
+          <span>梁宸瑜 IP 核心操盘</span>
+          <span>全网矩阵 2400 万+ 粉丝</span>
+          <span>50 人+团队统筹协作</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="light-ring"></div>
+              <figure class="phone-card phone-card--main" @click="openImage(heroImages[0])">
+                <img :src="asset(heroImages[0].src)" :alt="heroImages[0].alt" />
+              </figure>
+        <figure class="phone-card phone-card--back" @click="openImage(heroImages[1])">
+          <img :src="asset(heroImages[1].src)" :alt="heroImages[1].alt" />
+        </figure>
+              <article class="result-chip">
+          <strong>梁宸瑜</strong>
+          <span>我重点参与操盘的口才赛道知识 IP，全网矩阵粉丝 2400 万+</span>
+              </article>
+      </div>
+    </section>
+
+    <section id="overview" class="scene scene--overview" data-scene>
+      <div class="section-heading reveal">
+        <p class="kicker">核心履历概览</p>
+        <h2>我做过的核心工作，主要集中在 IP 增长、商业转化和团队管理。</h2>
+      </div>
+      <div class="overview-grid">
+        <article v-for="item in overview" :key="item.title" class="overview-card reveal">
+          <span>{{ item.index }}</span>
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.text }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="system" class="scene scene--system" data-scene>
+      <div class="sticky-layout">
+        <div class="sticky-title reveal">
+          <p class="kicker">我的工作方式</p>
+          <h2>重视系统能力，也重视团队协作。</h2>
+          <p>
+            面对老板或业务负责人，我会先把目标、阶段、资源和风险拆清楚，再推进内容、直播、投放和团队协作。
+            我不希望运营只靠个人灵感，而是希望团队能持续稳定地跑出结果。
+          </p>
+        </div>
+        <div class="system-stack">
+          <article v-for="item in systems" :key="item.title" class="system-card reveal">
+            <span>{{ item.index }}</span>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.text }}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="case" class="scene scene--case" data-scene>
+      <div class="case-copy reveal">
+        <p class="kicker">项目复用 · 黄骐认知舱</p>
+        <h2>从成熟 IP 方法，到新的内容项目。</h2>
+        <p>
+          在心理学垂类项目中，我尝试把过往在知识 IP 中沉淀的方法复用到新赛道：先明确用户痛点和信任路径，
+          再规划短视频内容、低价课承接和私域转化。这段经历让我更确信，运营不只是做爆款，而是把路径拆清楚、把结果复盘清楚。
+        </p>
+      </div>
+      <div class="case-panel reveal">
+        <button class="case-image" type="button" @click="openImage(caseImage)">
+          <img :src="asset(caseImage.src)" :alt="caseImage.alt" />
+          <span>点击查看原图</span>
+        </button>
+        <div class="case-result">
+          <p class="case-result__label">阶段性结果</p>
+          <div class="metrics">
+            <article v-for="metric in metrics" :key="metric.label">
+              <strong>{{ metric.value }}</strong>
+              <span>{{ metric.label }}</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proof" class="scene scene--proof" data-scene>
+      <div class="section-heading reveal">
+        <p class="kicker">项目材料</p>
+        <h2>账号、课程、内容、私域，共同构成完整运营链路。</h2>
+      </div>
+      <div class="proof-wall">
+        <figure v-for="work in works" :key="work.src" class="reveal" @click="openImage(work)">
+          <img :src="asset(work.src)" :alt="work.alt" />
+          <figcaption>{{ work.caption }} · 点击放大</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="management" class="scene scene--management" data-scene>
+      <div class="management-card reveal">
+        <p class="kicker">管理与协作</p>
+        <h2>作为运营总监，我更看重团队一起赢。</h2>
+        <div class="management-grid">
+          <p>我负责统筹内容、剪辑、摄影、直播运营等团队，把目标拆到流程、节点和复盘机制里。</p>
+          <p>面对平台变化和流量波动，我习惯用数据复盘，而不是简单归因，持续优化内容效率和转化效率。</p>
+          <p>我可以亲自下场做内容和直播，也可以把经验沉淀成 SOP，帮助团队降低对个人经验的依赖。</p>
+        </div>
+        <div class="fit-list">
+          <h3>我适合解决的问题</h3>
+          <ul>
+            <li>账号有内容基础，但商业化路径还不够清晰。</li>
+            <li>团队能执行，但缺少稳定 SOP、复盘机制和负责人梯队。</li>
+            <li>老板希望运营负责人既懂内容，也能对结果和团队效率负责。</li>
+          </ul>
+        </div>
+        <div class="final-actions">
+          <a :href="asset('content/resume/wei-qiuping-resume.pdf')" download>下载完整简历</a>
+          <button type="button" @click="showContact = true">查看联系方式</button>
+        </div>
+      </div>
+    </section>
+
+    <div v-if="selectedImage" class="modal" @click.self="closeImage">
+      <button class="modal__close" type="button" @click="closeImage">关闭</button>
+      <figure class="modal__image">
+        <img :src="asset(selectedImage.src)" :alt="selectedImage.alt" />
+        <figcaption>{{ selectedImage.caption || selectedImage.alt }}</figcaption>
+      </figure>
+    </div>
+
+    <div v-if="showContact" class="modal" @click.self="showContact = false">
+      <section class="contact-card">
+        <button class="modal__close" type="button" @click="showContact = false">关闭</button>
+        <p class="kicker">联系方式</p>
+        <h2>韦秋萍</h2>
+        <a href="tel:1584432155" class="contact-link">电话：1584432155</a>
+        <a href="mailto:1584432155@qq.com" class="contact-link">邮箱：1584432155@qq.com</a>
+        <a :href="asset('content/resume/wei-qiuping-resume.pdf')" download class="contact-link">下载完整简历</a>
+      </section>
     </div>
   </main>
 </template>
@@ -156,68 +184,85 @@ export default {
   name: 'App',
   data() {
     return {
-      activeIndex: 0,
-      previousIndex: null,
-      isTurning: false,
-      motionName: 'rise',
-      touchStartY: 0,
+      activeSection: 'hero',
+      scrollProgress: 0,
       cursor: { x: 0, y: 0 },
+      selectedImage: null,
+      showContact: false,
       sections: [
-        { id: 'hero', nav: '梁宸瑜' },
-        { id: 'system', nav: '操盘系统' },
-        { id: 'result', nav: '黄骐认知舱' },
-        { id: 'proof', nav: '作品链路' },
-        { id: 'director', nav: '总监能力' },
+        { id: 'hero', nav: '韦秋萍' },
+        { id: 'overview', nav: '履历概览' },
+        { id: 'system', nav: '工作方式' },
+        { id: 'case', nav: '项目复用' },
+        { id: 'proof', nav: '项目材料' },
+        { id: 'management', nav: '管理协作' },
+      ],
+      heroImages: [
+        { src: 'content/liangchenyu/account-home.png', alt: '梁宸瑜账号主页截图', caption: '梁宸瑜账号主页' },
+        { src: 'content/liangchenyu/account-data.png', alt: '梁宸瑜账号成果截图', caption: '梁宸瑜账号成果' },
+      ],
+      caseImage: { src: 'content/huangqi/course-poster.jpg', alt: '心理学课程海报', caption: '心理学课程承接页面' },
+      overview: [
+        {
+          index: '01',
+          title: '负责过账号结果',
+          text: '梁宸瑜 IP 是我重点参与操盘的项目，覆盖内容增长、直播转化、投放优化和团队协同。',
+        },
+        {
+          index: '02',
+          title: '理解老板关心的指标',
+          text: '不只看播放量，也会看进粉成本、转化效率、团队人效、交付质量和利润空间。',
+        },
+        {
+          index: '03',
+          title: '能把经验交给团队',
+          text: '通过 SOP、培训和复盘，把个人经验拆成团队可以持续执行的流程。',
+        },
       ],
       systems: [
         {
           index: '01',
-          title: '人设与赛道定位',
-          text: '先确定 IP 该解决谁的问题、用什么人格表达、用什么内容建立长期信任。',
+          title: '先理解业务目标',
+          text: '确认账号阶段、商业目标、用户需求和团队资源，再决定内容重点，而不是单纯追热点或追播放量。',
         },
         {
           index: '02',
-          title: '内容与直播转化',
-          text: '短视频负责制造信任和流量，直播间负责承接需求、完成转化和沉淀用户。',
+          title: '把内容和转化连起来',
+          text: '短视频、直播间、投放和私域围绕同一条用户路径协同，避免各做各的。',
         },
         {
           index: '03',
-          title: '投放与私域闭环',
-          text: '用数据反哺内容和投放策略，把流量成本、转化率和后端成交放在一起看。',
+          title: '用复盘降低不确定性',
+          text: '把选题、脚本、完播、进粉成本、成交数据放在一起看，让调整有依据。',
         },
         {
           index: '04',
-          title: '团队与 SOP 复制',
-          text: '把个人经验拆成流程、标准和培训，让团队能稳定产出，而不是靠单点能力。',
+          title: '让团队稳定产出',
+          text: '管理上重视 SOP、培训和梯队建设，让团队能力可以复制，避免业务依赖某一个人。',
         },
       ],
       metrics: [
-        { value: '100万+', label: '4 个月私域变现' },
-        { value: '80+', label: '单人完成短视频' },
-        { value: '300万+', label: '单条最高播放' },
-        { value: '8000+', label: '私域好友沉淀' },
+        { value: '100万+', label: '心理学项目 4 个月私域变现' },
+        { value: '80+', label: '单人阶段完成短视频内容' },
+        { value: '300万+', label: '单条内容最高播放量' },
+        { value: '8000+', label: '私域用户沉淀规模' },
       ],
       works: [
-        { src: 'ip-cases/liangchenyu-account-light.webp', alt: '梁宸瑜账号主页', caption: '梁宸瑜账号矩阵' },
-        { src: 'ip-cases/psychology-course-poster.webp', alt: '心理学课程海报', caption: '课程产品转化' },
-        { src: 'ip-cases/huangqi-content-grid.webp', alt: '黄骐认知舱内容矩阵', caption: '短视频内容矩阵' },
-        { src: 'ip-cases/private-community.webp', alt: '私域社群截图', caption: '私域承接链路' },
+        { src: 'content/liangchenyu/account-home.png', alt: '梁宸瑜账号主页', caption: '梁宸瑜账号矩阵' },
+        { src: 'content/huangqi/course-poster.jpg', alt: '心理学课程海报', caption: '课程产品承接' },
+        { src: 'content/huangqi/content-grid.png', alt: '黄骐认知舱内容矩阵', caption: '短视频内容矩阵' },
+        { src: 'content/private-domain/community.jpg', alt: '私域社群截图', caption: '私域承接链路' },
       ],
     }
   },
-  computed: {
-    currentPage() {
-      return String(this.activeIndex + 1).padStart(2, '0')
-    },
-    totalPages() {
-      return String(this.sections.length).padStart(2, '0')
-    },
-  },
   mounted() {
-    window.addEventListener('keydown', this.handleKeydown)
+    this.setupReveal()
+    this.setupSceneObserver()
+    window.addEventListener('scroll', this.handleScroll, { passive: true })
+    this.handleScroll()
   },
   beforeUnmount() {
-    window.removeEventListener('keydown', this.handleKeydown)
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     asset(path) {
@@ -226,45 +271,42 @@ export default {
     handlePointerMove(event) {
       this.cursor = { x: event.clientX, y: event.clientY }
     },
-    handleWheel(event) {
-      if (Math.abs(event.deltaY) < 18) return
-      this.step(event.deltaY > 0 ? 1 : -1)
+    handleScroll() {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      this.scrollProgress = maxScroll > 0 ? Math.min((window.scrollY / maxScroll) * 100, 100) : 0
     },
-    handleTouchStart(event) {
-      this.touchStartY = event.changedTouches[0].clientY
+    scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     },
-    handleTouchEnd(event) {
-      const distance = this.touchStartY - event.changedTouches[0].clientY
-      if (Math.abs(distance) > 42) this.step(distance > 0 ? 1 : -1)
+    openImage(image) {
+      this.selectedImage = image
     },
-    handleKeydown(event) {
-      if (['ArrowDown', 'PageDown', ' '].includes(event.key)) {
-        event.preventDefault()
-        this.step(1)
-      }
+    closeImage() {
+      this.selectedImage = null
+    },
+    setupReveal() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add('is-visible')
+          })
+        },
+        { threshold: 0.18 },
+      )
 
-      if (['ArrowUp', 'PageUp'].includes(event.key)) {
-        event.preventDefault()
-        this.step(-1)
-      }
+      document.querySelectorAll('.reveal').forEach((element) => observer.observe(element))
     },
-    step(direction) {
-      const nextIndex = Math.min(Math.max(this.activeIndex + direction, 0), this.sections.length - 1)
-      this.goTo(nextIndex)
-    },
-    goTo(index) {
-      if (index === this.activeIndex || this.isTurning) return
+    setupSceneObserver() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) this.activeSection = entry.target.id
+          })
+        },
+        { threshold: 0.45 },
+      )
 
-      const motions = ['rise', 'split', 'zoom', 'slide', 'soft']
-      this.previousIndex = this.activeIndex
-      this.motionName = motions[index % motions.length]
-      this.isTurning = true
-      this.activeIndex = index
-
-      window.setTimeout(() => {
-        this.previousIndex = null
-        this.isTurning = false
-      }, 980)
+      document.querySelectorAll('[data-scene]').forEach((scene) => observer.observe(scene))
     },
   },
 }

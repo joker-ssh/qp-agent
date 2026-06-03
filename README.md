@@ -1,12 +1,14 @@
-# 韦秋萍个人网站
+# 韦秋萍个人展示站
 
-这是一个用于展示运营总监个人经历与项目亮点的 Vue3 + Vite 静态网站模板。
+这是一个面向面试和老板查看的个人展示网站，使用 Vue 3 + Vite 构建，重点展示知识 IP 增长、商业转化、团队 SOP、讲师和主播能力。
 
 ## 先读这个
 
-- 用户入口：`src/App.vue`
+- 页面入口：`src/App.vue`
 - 样式入口：`src/style.css`
-- 简历文件：`public/resume.pdf`
+- 核心素材：`public/content/core-work/`
+- 轻量展示图：`public/content/optimized/`
+- 简历文件：`public/content/resume/wei-qiuping-resume.pdf`
 
 ## 本地运行
 
@@ -17,27 +19,12 @@ npm run dev
 
 打开终端显示的本地地址，一般是 `http://localhost:5173`。
 
-## 部署到公网
+## Vercel 部署
 
-你不需要写服务端。这个项目是静态网站，可以直接部署到 GitHub Pages：
+这个项目是静态前端站，部署到 Vercel 使用默认 Vite 配置即可：
 
-1. 打开 GitHub 仓库 `joker-ssh/qp-agent`
-2. 进入 `Settings` → `Pages`
-3. `Build and deployment` 的 `Source` 选择 `GitHub Actions`
-4. 以后每次推送 `main` 分支，GitHub 会自动运行 `.github/workflows/deploy.yml`
-5. 部署成功后的公网地址是 `https://joker-ssh.github.io/qp-agent/`
+- Build Command：`npm run build`
+- Output Directory：`dist`
+- Install Command：`npm install`
 
-GitHub Pages 部署的是 `npm run build` 生成的 `dist` 静态文件。
-
-## 推送到 GitHub
-
-```bash
-git init
-git add .
-git commit -m "init personal website"
-git branch -M main
-git remote add origin https://github.com/joker-ssh/qp-agent.git
-git push -u origin main
-```
-
-如果远端仓库已经有内容，先告诉我，我可以帮你处理同步和冲突。
+不需要配置 GitHub Pages 的 `/qp-agent/` 路径。

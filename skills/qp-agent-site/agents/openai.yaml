@@ -1,0 +1,3 @@
+display_name: QP Agent Site
+short_description: Maintain and deploy the qp-agent Vite website.
+default_prompt: Use this skill to maintain or deploy the qp-agent personal website.

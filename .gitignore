@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .vercel/
+.agents/
 *.log
 .DS_Store
 image-contact-sheet.jpg
